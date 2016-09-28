@@ -33,6 +33,11 @@ def GetPeople():
     ]
     return jsonify(results=list)
 
+
+@app.route('/api/hello')
+def hello_world():
+    return 'IDI NAHUI <====3'
+
 @app.route('/api/people/<name>')
 def SayHello(name):
     message = {
