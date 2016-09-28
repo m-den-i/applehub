@@ -13,13 +13,29 @@
 # limitations under the License.
 
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
+from cloudant.result import Result, ResultByKey
+from cloudant.client import Cloudant
+import random
 
 app = Flask(__name__)
+PORT_NUMBER = 8080
+cred = {
+  "username": "13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix",
+  "password": "f992a4aa0b014e94f3029101c8c7923af6691343fabce39fc851b6c3c69cf943",
+  "host": "13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix.cloudant.com",
+  "port": 443,
+  "url": "https://13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix:f992a4aa0b014e94f3029101c8c7923af6691343fabce39fc851b6c3c69cf943@13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix.cloudant.com"
+}
+client = Cloudant(cred['username'], cred['password'], url=cred['url'], account=cred['username'])
+client.connect()
+my_database = client['mydb']
 
 @app.route('/')
 def Welcome():
-    return app.send_static_file('index.html')
+    all_docs = [doc for doc in my_database]
+    return render_template('index.html', joke=random.choice(all_docs)['joke'])
+
 
 @app.route('/myapp')
 def WelcomeToMyapp():
@@ -32,11 +48,6 @@ def GetPeople():
         {'name': 'Bill', 'val': 26}
     ]
     return jsonify(results=list)
-
-
-@app.route('/api/hello')
-def hello_world():
-    return 'IDI NAHUI <====3'
 
 @app.route('/api/people/<name>')
 def SayHello(name):
