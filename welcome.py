@@ -13,33 +13,44 @@
 # limitations under the License.
 
 import os
-from flask import Flask, jsonify, render_template
+import random
+
+from flask import Flask, jsonify, render_template, request, redirect
+
 from cloudant.result import Result, ResultByKey
 from cloudant.client import Cloudant
-import random
+from alchemyapi_python.alchemyapi import AlchemyAPI
+alchemyapi = AlchemyAPI()
 
 app = Flask(__name__)
 PORT_NUMBER = 8080
 cred = {
-  "username": "13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix",
-  "password": "f992a4aa0b014e94f3029101c8c7923af6691343fabce39fc851b6c3c69cf943",
-  "host": "13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix.cloudant.com",
+  "username": os.environ['CLOUDANT_HOST'] + "-bluemix",
+  "password": os.environ['CLOUDANT_PASSWORD'],
+  "host": os.environ['CLOUDANT_HOST'] + "-bluemix.cloudant.com",
   "port": 443,
-  "url": "https://13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix:f992a4aa0b014e94f3029101c8c7923af6691343fabce39fc851b6c3c69cf943@13119a46-72cc-4f66-ad4d-239cdb813e0c-bluemix.cloudant.com"
+  "url": "https://" + os.environ['CLOUDANT_HOST'] + "-bluemix.cloudant.com"
 }
 client = Cloudant(cred['username'], cred['password'], url=cred['url'], account=cred['username'])
 client.connect()
 my_database = client['mydb']
 
-@app.route('/')
+
+@app.route('/joke')
 def Welcome():
     all_docs = [doc for doc in my_database]
     return render_template('index.html', joke=random.choice(all_docs)['joke'])
 
 
-@app.route('/myapp')
-def WelcomeToMyapp():
+@app.route('/')
+def index():
+    return render_template('main.html')
+
+
+@app.route('/text')
+def text():
     return 'Welcome again to my app running on Bluemix!'
+
 
 @app.route('/api/people')
 def GetPeople():
@@ -48,6 +59,7 @@ def GetPeople():
         {'name': 'Bill', 'val': 26}
     ]
     return jsonify(results=list)
+
 
 @app.route('/api/people/<name>')
 def SayHello(name):
@@ -58,4 +70,4 @@ def SayHello(name):
 
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=int(port))
+    app.run(host='0.0.0.0', port=int(port))
