@@ -96,3 +96,25 @@ pre {
 	margin: 0;
 }
 
+.nav{
+	top: 0;
+	height: 40px;
+	width: 100%;
+	position: relative;
+	color: black;
+	background: white;
+}
+.nav h1 {
+	margin-top: 0;
+}
+.content{
+	position: relative;
+	display: block;
+}
+.content .item img{
+	max-width: 150px;
+}
+.content .item {
+	position: relative;
+	display: inline-block;
+}

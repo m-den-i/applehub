@@ -15,10 +15,14 @@
 import os
 import random
 
+import json
+from cloudant.document import Document
 from flask import Flask, jsonify, render_template, request, redirect
 
 from cloudant.result import Result, ResultByKey
 from cloudant.client import Cloudant
+from flask import send_from_directory
+
 from alchemyapi_python.alchemyapi import AlchemyAPI
 alchemyapi = AlchemyAPI()
 
@@ -50,6 +54,17 @@ def index():
 @app.route('/text')
 def text():
     return 'Welcome again to my app running on Bluemix!'
+
+
+@app.route('/get-apples')
+def get_apples():
+    with Document(my_database, '659038ba74b86eafe7b3fb2632f1fc4b') as document:
+        return json.dumps(document)
+
+
+@app.route('/apples')
+def apples():
+    return app.send_static_file('html/apples.html')
 
 
 @app.route('/api/people')

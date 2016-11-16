@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="Apple">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/stylesheets/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="static/js/main.js"></script>
+</head>
+<body ng-controller="AppleController">
+    <div class="nav"><h1>Apple shop</h1><h4 style="float: right">{{ cartLength }} apples in cart</h4></div>
+        <h1>Catalogue</h1>
+        <div class="content">
+            <div class="row" ng-repeat="ap in apples">
+                <div class="item">
+                   <img ng-src="{{ ap.pic }}">
+                    <br>
+                    {{ ap.name }}
+                </div>
+                <div class="item" style="vertical-align: top; font-weight: bold">
+                    Price: {{ ap.price }}
+                </div>
+                <div class="item" style="vertical-align: top;">
+                    <button ng-click="add(ap, $index)">Add to cart</button>
+                    <br>
+                    <button ng-click="remove(ap, $index)">Remove</button>
+                </div>
+            </div>
+        </div>
+        <button ng-click="buy()" style="margin-top: 15px;">Order</button>
+</body>
+</html>
